@@ -6,6 +6,7 @@ let activities = [];
 let gradeBooksSetup = [];
 let grades = [];
 let areas = [];
+let summaryGrades = [];
 function addStudent() {
     let currentStudent = {
         fullName: readFormHtml("fullName"),
@@ -62,6 +63,17 @@ function addArea() {
     console.table(areas);
     initSelect();
 }
+function addSummaryGrade() {
+    let currentSummaryGrade = {
+        studentName: readFormHtml("fullName"),
+        teacher: readFormHtml("fullName-teacher"),
+        grade: readFormHtml("grade-summary"),
+        score: parseInt(readFormHtml("score-summary")),
+    };
+    summaryGrades.push(currentSummaryGrade);
+    console.table(summaryGrades);
+    initSelect();
+}
 function readFormHtml(id) {
     return document.getElementById(id).value;
 }
@@ -87,6 +99,13 @@ function initSelect() {
         option.value = value.name,
             option.text = value.name,
             activityGradebook.add(option);
+    });
+    let summaryGrade = document.getElementById("student-summary");
+    students.forEach((value) => {
+        let option = document.createElement("option");
+        option.value = value.fullName,
+            option.text = value.fullName,
+            summaryGrade.add(option);
     });
 }
 initSelect();

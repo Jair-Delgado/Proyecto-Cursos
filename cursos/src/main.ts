@@ -4,6 +4,7 @@ import { Student } from "./entities/student.entity";
 import { Teacher } from "./entities/teacher.entity";
 import {Grade} from "./entities/grade.entity";
 import {Area} from "./entities/area.entity";
+import { SummaryGrade } from "./entities/summaryGrades.entity";
 
 let students: Student[] = [];
 let teachers: Teacher[] = [];
@@ -11,7 +12,7 @@ let activities: Activity[] = [];
 let gradeBooksSetup: GradeBookSetup[] = [];
 let grades: Grade[] = [];
 let areas: Area[] = [];
-
+let summaryGrades: SummaryGrade[] = [];
 
 function addStudent(): void {
     let currentStudent: Student = {
@@ -76,6 +77,19 @@ function addArea(): void {
     initSelect();
 }
 
+function addSummaryGrade(): void {
+    let currentSummaryGrade: SummaryGrade = {
+        studentName: readFormHtml("fullName"),
+        teacher: readFormHtml("fullName-teacher"),
+        grade: readFormHtml("grade-summary"),
+        score: parseInt(readFormHtml("score-summary")),
+    }
+    summaryGrades.push(currentSummaryGrade);
+    console.table(summaryGrades);
+    initSelect();
+}
+
+
 function readFormHtml(id: string): string {
     return (<HTMLInputElement>document.getElementById(id)).value;
 }
@@ -107,6 +121,15 @@ function initSelect(): void {
             option.value = value.name,
                 option.text = value.name,
                 activityGradebook.add(option);
+        }
+    );
+    let summaryGrade = document.getElementById("student-summary") as HTMLSelectElement;
+    students.forEach(
+        (value) => {
+            let option = document.createElement("option");
+            option.value = value.fullName,
+                option.text = value.fullName,
+                summaryGrade.add(option);
         }
     );
 }
