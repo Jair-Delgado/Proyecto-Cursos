@@ -1,10 +1,11 @@
 import { Activity } from "./entities/activity.entity";
-import { GradeBookSetup } from "./entities/gradeBookSetup.entity";
-import { Student } from "./entities/student.entity";
+import { GradeBookSetup } from './entities/gradeBookSetup.entity';
+import { Student } from './entities/student.entity';
 import { Teacher } from "./entities/teacher.entity";
 import {Grade} from "./entities/grade.entity";
 import {Area} from "./entities/area.entity";
-import { SummaryGrade } from "./entities/summaryGrades.entity";
+import { SummaryGrade } from './entities/summaryGrades.entity';
+import { ReportGradeDTO } from './entities/reportGradeDTO.entity';
 
 let students: Student[] = [];
 let teachers: Teacher[] = [];
@@ -21,10 +22,10 @@ function addStudent(): void {
         direction: readFormHtml("direction"),
         enrollment: parseInt(readFormHtml("enrollment")),
         level: readFormHtml("level"),
-
     }
     students.push(currentStudent);
     console.table(students)
+    initSelect();
 }
 
 function addTeacher(): void {
@@ -89,7 +90,6 @@ function addSummaryGrade(): void {
     initSelect();
 }
 
-
 function readFormHtml(id: string): string {
     return (<HTMLInputElement>document.getElementById(id)).value;
 }
@@ -134,5 +134,60 @@ function initSelect(): void {
     );
 }
 
-
 initSelect();
+class Report{
+
+    constructor(
+        public name:string,
+        public identification:number,
+        public level:string,
+        public course:string,
+        public grade:number,
+        public state:boolean,)
+        {};
+
+        public buildReportDTO():ReportGradeDTO[] 
+        {
+            let reportGradesDTO: ReportGradeDTO[] = [];
+            this.summaryGrade.forEach(
+                (assigment) =>{
+                    let currentGradeBookSetup = gradeBooksSetup.filter(
+                        (item)=> item.value === assignment.gradeBookSetup[0]
+                    );
+                        
+                    let currentStudent = students.filter((item)=> students.identification === assigment.student[1]);
+
+                    let rowGradeBook: ReportGradeDTO = {
+                        //Curso
+                        grade: currentGradeBookSetup.course,
+
+                        //student 
+                        studentName: currentStudent.fullName,
+                        lastName: "",
+                        level: currentStudent.level,
+                        identification: assigment.student,
+                        fullName: currentStudent.fullName,
+                        //GradeBookSetup
+                        value:"",
+                        activity:"",
+                        maximunGrade:0,
+                        //Activity
+                        name:"",
+                        //SummaryGrade
+                        student:assigment.student,
+                        score:assigment.SummaryGrade,
+                    }
+                    reportGradesDTO.push(rowGradeBook);
+                }   
+            )
+            return reportGradesDTO;     
+        }
+        function generateReport():void {
+            let gradeBook:GradeBookSetup = new GradeBookSetup(
+                student,
+                activities,
+                maximunGrade,   
+            )
+            
+        }
+    }
